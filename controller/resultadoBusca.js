@@ -88,6 +88,53 @@ if (btnAlterar) {
         });
     }
 
+        // Botão Inativar
+    const btnInativar = document.getElementById("btn-inativar");
+
+    if (btnInativar) {
+        btnInativar.addEventListener("click", () => {
+
+            if (fornecedorSelecionado) {
+
+                // Salva o fornecedor selecionado
+                localStorage.setItem(
+                    "fornecedorSelecionado",
+                    JSON.stringify(fornecedorSelecionado)
+                );
+
+                // Informa para a próxima tela qual operação será realizada
+                localStorage.setItem("modoTela", "inativar");
+
+            
+                window.location.href = "AtivacaoDesativacao.html";
+            }
+        });
+    }
+
+
+    // Botão Ativar
+    const btnAtivar = document.getElementById("btn-ativar");
+
+    if (btnAtivar) {
+        btnAtivar.addEventListener("click", () => {
+
+            if (fornecedorSelecionado) {
+
+                // Salva o fornecedor selecionado
+                localStorage.setItem(
+                    "fornecedorSelecionado",
+                    JSON.stringify(fornecedorSelecionado)
+                );
+
+                // Informa para a próxima tela qual operação será realizada
+                localStorage.setItem("modoTela", "ativar");
+
+                // Redireciona para a tela de inativação/ativação
+                window.location.href = "AtivacaoDesativacao.html";
+            }
+        });
+    }
+
     //Bloco que exibe os valores filtrados na tela de resultadoBusca
 
     //procura a tabelaFornecedoresMock no html resultadoBusca.html
@@ -161,15 +208,48 @@ function carregarTabelaFiltrada(tbody) {
     });
         //função para habilitar os botões após ser selecionado algum fornecedor 
         function atualizarEstadoBotoes(fornecedor) {
-        const btnVisualizar = document.getElementById("btn-visualizar");
-        const btnAlterar = document.getElementById("btn-alterar");
 
-        // Se existe um fornecedor selecionado, habilita Visualizar e Alterar
-        if (fornecedor) {
-        if (btnVisualizar) btnVisualizar.disabled = false;
-        if (btnAlterar) btnAlterar.disabled = false;
+    const btnVisualizar = document.getElementById("btn-visualizar");
+    const btnAlterar = document.getElementById("btn-alterar");
+    const btnInativar = document.getElementById("btn-inativar");
+    const btnAtivar = document.getElementById("btn-ativar");
+
+    if (fornecedor) {
+
+        // Visualizar e Alterar são habilitados
+        // sempre que existir um fornecedor selecionado
+        if (btnVisualizar) {
+            btnVisualizar.disabled = false;
         }
+
+        if (btnAlterar) {
+            btnAlterar.disabled = false;
         }
+
+
+        // Verifica o status do fornecedor selecionado
+        if (fornecedor.status.toLowerCase() === "ativo") {
+
+            if (btnInativar) {
+                btnInativar.disabled = false;
+            }
+
+            if (btnAtivar) {
+                btnAtivar.disabled = true;
+            }
+
+        } else if (fornecedor.status.toLowerCase() === "inativo") {
+
+            if (btnInativar) {
+                btnInativar.disabled = true;
+            }
+
+            if (btnAtivar) {
+                btnAtivar.disabled = false;
+            }
+        }
+    }
+}
 
 }
       

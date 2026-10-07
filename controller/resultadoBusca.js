@@ -7,6 +7,34 @@ let fornecedorSelecionado = null;
 // html terminar de ser executado para rodar o restante da lógica
 document.addEventListener("DOMContentLoaded", () => {
 
+
+    const btnBuscar = document.getElementById("buscar");
+    
+    if (btnBuscar) {
+        btnBuscar.addEventListener("click", (e) => {
+            e.preventDefault(); // Impede o recarregamento da página (comportamento padrão do type="submit")
+
+            // Captura os valores atuais da tela (verifique se os IDs dos seus inputs são esses mesmos)
+            const valorRazao = document.getElementById("razaoSocial")?.value.trim().toLowerCase() || "";
+            const valorStatus = document.getElementById("status")?.value || "todos";
+
+            // Recupera os filtros anteriores para não perder dados como CNPJ, Cidade ou Estado
+            const filtrosAtuais = JSON.parse(localStorage.getItem("filtrosFornecedor")) || {};
+            
+            // Atualiza apenas a Razão Social e o Status com o que foi digitado/selecionado agora
+            filtrosAtuais.razaoSocial = valorRazao;
+            filtrosAtuais.status = valorStatus;
+
+            // Salva os filtros atualizados
+            localStorage.setItem("filtrosFornecedor", JSON.stringify(filtrosAtuais));
+            
+            // Procura a tabela e recarrega passando os novos filtros
+            const tbody = document.getElementById("tabelaFornecedoresMock");
+            if (tbody) {
+                carregarTabelaFiltrada(tbody);
+            }
+        });
+    }
       //botão visualizar que será direcionado para a tela cadastro fornecedor, tela que ainda ser´´a implementada pela debora        
         const btnVisualizar = document.getElementById("btn-visualizar");
         if (btnVisualizar) {
@@ -20,10 +48,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 // Redireciona para a tela do formulário
                 window.location.href = "CadastroFornecedor.html";
             }
-    });
-
+        });
+    }
     
-}
 
 // Captura o botão Alterar do HTML e redireciona também para a tela de cadastroFornecedor
 const btnAlterar = document.getElementById("btn-alterar");
@@ -61,38 +88,6 @@ if (btnAlterar) {
         });
     }
 
-    //Captura os dados da telaBusca.html, atráves do id do formulário: FormBusca
-    const formBusca = document.getElementById("FormBusca");
-
-    //validação para identificar se foi encontrado o formBusca
-    if (formBusca) {
-        formBusca.addEventListener("submit", (e) => {
-            e.preventDefault(); // Impede o envio, reiniciando a tela padrão do html,para não perddermos os dados e tratarmos  no JS
-
-            // Captura o valor de cada ID exatamente como está no seu HTML
-            const filtros = {
-                //Procura os ids guardados no html, trata os dados tirando o espaço com o value.trim
-                // Substitui as letras maiúsculas para minusculas com o 
-                //|| "" caso não haja valor, ele me retorna vazio Para todos os ids
-
-                codigo: document.getElementById("codigo")?.value.trim().toLowerCase() || "",
-                razaoSocial: document.getElementById("razaoSocial")?.value.trim().toLowerCase() || "",
-                nomeFantasia: document.getElementById("nomeFantasia")?.value.trim().toLowerCase() || "",
-                cnpj: document.getElementById("CNPJ")?.value.trim() || "",
-                cidade: document.getElementById("cidade")?.value.trim().toLowerCase() || "",
-                estado: document.getElementById("estado")?.value || "",
-                status: document.getElementById("status")?.value || "todos"
-            };
-
-            // Salva na memória temporária do navegador (localStorage)
-            localStorage.setItem("filtrosFornecedor", JSON.stringify(filtros));
-
-            // Redireciona para a tela de resultados
-            window.location.href = "ResultadoBusca.html";
-        });
-    }
-
-   
     //Bloco que exibe os valores filtrados na tela de resultadoBusca
 
     //procura a tabelaFornecedoresMock no html resultadoBusca.html
@@ -112,7 +107,7 @@ function carregarTabelaFiltrada(tbody) {
     const filtros = JSON.parse(localStorage.getItem("filtrosFornecedor")) || {};
 
     // Aplica o filtro sobre o array mockado (fornecedoresMock) com o tratamento de letras maiusculas e minusculas com o toLowerCase
-    const fornecedoresFiltrados = fornecedoresMock.filter(fornecedor => {
+        const fornecedoresFiltrados = fornecedoresMock.filter(fornecedor => {
         const matchCodigo = !filtros.codigo || fornecedor.codigo.toLowerCase().includes(filtros.codigo);
         const matchRazao = !filtros.razaoSocial || fornecedor.razaoSocial.toLowerCase().includes(filtros.razaoSocial);
         const matchFantasia = !filtros.nomeFantasia || fornecedor.nomeFantasia.toLowerCase().includes(filtros.nomeFantasia);

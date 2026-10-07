@@ -51,6 +51,11 @@ if (btnAlterar) {
     // Se o botão existir na tela atual
     if (btnNovo) {
         btnNovo.addEventListener("click", () => {
+            localStorage.setItem("modoTela", "novo");
+            
+            // Limpa o fornecedor selecionado, caso haja algum
+            localStorage.removeItem("fornecedorSelecionado");
+
             // Redireciona o navegador para a tela de cadastro
             window.location.href = "CadastroFornecedor.html"; 
         });

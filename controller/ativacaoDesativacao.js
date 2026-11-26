@@ -1,49 +1,73 @@
-const modoTela = localStorage.getItem("modoTela");
+import { fornecedorService } from "../services/fornecedorService.js";
+import { exibirUsuarioAutenticado } from "../services/usuarioUi.js";
 
-const fornecedorSelecionado = JSON.parse(
-    localStorage.getItem("fornecedorSelecionado")
-);
+const modoTela = localStorage.getItem("modoTela");
+const fornecedorSelecionado = JSON.parse(localStorage.getItem("fornecedorSelecionado") || "null");
 
 const tituloTela = document.getElementById("tituloTela");
 const formStatusFornecedor = document.getElementById("formStatusFornecedor");
 const btnCancelar = document.getElementById("btnCancelar");
+const selectCategoria = document.getElementById("categoria");
+const campoJustificativa = document.getElementById("justificativa");
+const alertaValidacao = document.getElementById("alertaValidacao");
 
-function configurarTela() {
+async function carregarCategorias() {
+    const dominios = await fornecedorService.dominios();
+    const categorias =
+        modoTela === "inativar" ? dominios.categoriasInativacao : dominios.categoriasAtivacao;
 
-    if (modoTela === "inativar") {
-
-        tituloTela.textContent = "Inativar Fornecedor";
-
-    } else if (modoTela === "ativar") {
-
-        tituloTela.textContent = "Ativar Fornecedor";
-
-    }
-
+    selectCategoria.innerHTML = '<option value="">Selecione</option>';
+    categorias.forEach((categoria) => {
+        const option = document.createElement("option");
+        option.value = categoria.id;
+        option.textContent = categoria.descricao;
+        selectCategoria.appendChild(option);
+    });
 }
 
-btnCancelar.addEventListener("click", function () {
+function configurarTela() {
+    if (modoTela === "inativar") {
+        tituloTela.textContent = "Inativar Fornecedor";
+    } else if (modoTela === "ativar") {
+        tituloTela.textContent = "Ativar Fornecedor";
+    }
+}
 
+btnCancelar?.addEventListener("click", () => {
     window.location.href = "TelaBusca.html";
-
 });
 
-formStatusFornecedor.addEventListener("submit", function (event) {
-
+formStatusFornecedor?.addEventListener("submit", async (event) => {
     event.preventDefault();
 
-    if (modoTela === "inativar") {
+    const categoriaId = selectCategoria.value;
+    const justificativa = campoJustificativa.value.trim();
 
-        alert("Fornecedor inativado com sucesso!");
-
-    } else if (modoTela === "ativar") {
-
-        alert("Fornecedor ativado com sucesso!");
-
+    if (!categoriaId || !justificativa) {
+        alertaValidacao?.classList.remove("d-none");
+        alertaValidacao.textContent = "Informe categoria e justificativa (E4).";
+        return;
     }
 
-    window.location.href = "TelaBusca.html";
+    try {
+        const payload = { categoriaId, justificativa };
+        const codigo = fornecedorSelecionado.codigo;
+        const resposta =
+            modoTela === "inativar"
+                ? await fornecedorService.inativar(codigo, payload)
+                : await fornecedorService.ativar(codigo, payload);
 
+        alert(resposta.mensagem);
+        window.location.href = "TelaBusca.html";
+    } catch (erro) {
+        const detalhes = erro.detalhes || {};
+        alertaValidacao?.classList.remove("d-none");
+        alertaValidacao.textContent = detalhes.mensagem || erro.message;
+    }
 });
 
-configurarTela();
+document.addEventListener("DOMContentLoaded", async () => {
+    exibirUsuarioAutenticado();
+    configurarTela();
+    await carregarCategorias();
+});

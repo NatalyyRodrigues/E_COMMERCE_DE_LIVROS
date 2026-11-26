@@ -1,0 +1,12 @@
+{
+  "name": "e-commerce-de-livros",
+  "version": "2.0.0",
+  "private": true,
+  "description": "CDU01 — Manter Cadastro de Fornecedores. Scripts npm na raiz delegam para backend/.",
+  "scripts": {
+    "postinstall": "npm install --prefix backend",
+    "start": "npm start --prefix backend",
+    "dev": "npm run dev --prefix backend",
+    "install:backend": "npm install --prefix backend"
+  }
+}

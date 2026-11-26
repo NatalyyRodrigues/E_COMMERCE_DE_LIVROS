@@ -19,6 +19,8 @@
 
         <h2 class="mb-4">Cadastro de Fornecedor</h2>
 
+        <div id="alertaValidacao" class="alert alert-danger d-none" role="alert"></div>
+
         <form id="formFornecedor">
 
             <!-- DADOS DO FORNECEDOR -->
@@ -87,7 +89,12 @@
                                 required>
                         </div>
 
-                        <div class="col-md-6 mb-3">
+                        <div class="col-md-3 mb-3">
+                            <label for="status" class="form-label">Status</label>
+                            <input type="text" class="form-control" id="status" disabled>
+                        </div>
+
+                        <div class="col-md-3 mb-3">
                             <label for="email" class="form-label">
                                 E-mail *
                             </label>
@@ -364,11 +371,16 @@
 
             </div>
 
+            <fieldset class="border p-3 mb-3">
+                <legend class="float-none w-auto px-2 fs-6">Usuário</legend>
+                <span id="usuarioLogado"></span>
+            </fieldset>
+
         </form>
 
     </div>
 
-    <script src="../controller/cadastroFornecedor.js"></script>
+    <script type="module" src="../controller/cadastroFornecedor.js"></script>
 
 </body>
 

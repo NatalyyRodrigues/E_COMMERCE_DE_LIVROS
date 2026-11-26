@@ -1,4 +1,5 @@
-
+// OBSOLETO: mantido apenas como referência da etapa 1.
+// A aplicação utiliza a API REST + SQLite (veja DOCUMENTACAO.md).
 //Lista de usuários mockados para teste das telas 
 const fornecedoresMock = [
     {

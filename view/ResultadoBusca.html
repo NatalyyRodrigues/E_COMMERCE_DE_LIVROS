@@ -1,74 +1,86 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Resultado Busca de Fornecedores - E-commerce de Livros</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" 
-    integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
     <style>
+        fieldset.box-usuario {
+            border: 1.5px solid #828080 !important;
+            padding: 2px 12px 6px 12px !important;
+            margin-top: 15px;
+        }
+        fieldset.box-usuario legend {
+            float: none !important;
+            width: auto !important;
+            padding: 0 8px !important;
+            margin-bottom: 0 !important;
+            font-size: 0.95rem !important;
+            font-weight: 500;
+        }
     </style>
 </head>
 <body>
-      <!-- Tela de Resultado de Busca (11.2) -->
     <div class="container my-4">
-        <section id="ecra-resultado-busca" class="card shadow-sm p-2 mb-4">
-        <h4 class="card-title border-bottom pb-2">
-            Cadastro de Fornecedores </h4>
-        
-    
+        <section id="ecra-resultado-busca" class="card shadow-sm p-3 mb-4">
+            <h4 class="card-title border-bottom pb-2">Resultado da Busca — Fornecedores</h4>
+
+            <div id="mensagemResultado" class="alert alert-info d-none" role="alert"></div>
+
             <div class="mb-3 row">
-                <label for="razaoSocial" class="col-sm-2 col-form-label">Razão Social: </label>
+                <label for="razaoSocial" class="col-sm-2 col-form-label">Razão Social:</label>
                 <div class="col-sm-3">
-                    <input type="text" class="form-control" id="razaoSocial" name="razao-social" maxlength="100">
+                    <input type="text" class="form-control" id="razaoSocial" maxlength="100">
                 </div>
 
-                    <label for="status" class="col-sm-1 col-form-label">Status: </label>
-                    <div class="col-sm-2">
-                        <select class="form-select" id="status">
-                            <option value="todos" selected> Todos </option>
-                            <option value="ativo" > Ativo </option>
-                            <option value="inativo" > Inativo </option>
-                        </select>
-                     </div>
-                     <div class="col-sm-3">
-                        <div class="text-center">
-                        <button type="submit"  class="btn btn-secondary" id="buscar" >
-                            Buscar
-                        </button>
-                    </div>
+                <label for="status" class="col-sm-1 col-form-label">Status:</label>
+                <div class="col-sm-2">
+                    <select class="form-select" id="status">
+                        <option value="todos" selected>Todos</option>
+                        <option value="ativo">Ativo</option>
+                        <option value="inativo">Inativo</option>
+                    </select>
+                </div>
 
-                    <!-- 1. Botões de Ação -->
-                    <div class="d-flex gap-3 justify-content-end mt-3 mb-5">
-                    <button type="button" id="btn-novo" class="btn btn-secondary">Novo</button>
-                    <button type="button" id="btn-visualizar" class="btn btn-secondary" disabled>Visualizar</button>
-                    <button type="button" id="btn-alterar" class="btn btn-secondary" disabled>Alterar</button>
-                    <button type="button" id="btn-inativar" class="btn btn-secondary" disabled>Inativar</button>
-                    <button type="button" id="btn-ativar" class="btn btn-secondary" disabled>Ativar</button>
-                </div> 
+                <div class="col-sm-2">
+                    <button type="button" class="btn btn-secondary" id="buscar">Buscar</button>
+                </div>
             </div>
-           
-            <!--tabela de visualização dos fornecedores-->
-            <div class="container text-center my-3">
+
+            <div class="d-flex gap-3 justify-content-end mt-2 mb-3">
+                <button type="button" id="btn-novo" class="btn btn-secondary" disabled>Novo</button>
+                <button type="button" id="btn-visualizar" class="btn btn-secondary" disabled>Visualizar</button>
+                <button type="button" id="btn-alterar" class="btn btn-secondary" disabled>Alterar</button>
+                <button type="button" id="btn-inativar" class="btn btn-secondary" disabled>Inativar</button>
+                <button type="button" id="btn-ativar" class="btn btn-secondary" disabled>Ativar</button>
+            </div>
+
             <div class="table-responsive">
-                 <table class="table table-striped table-hover border"> 
+                <table class="table table-striped table-hover border">
                     <thead class="table-light">
                         <tr>
                             <th scope="col">Código</th>
                             <th scope="col">Razão Social</th>
                             <th scope="col">Nome Fantasia</th>
                             <th scope="col">CNPJ</th>
-                            <th scope="col">Cidade/UF</th>
+                            <th scope="col">Cidade</th>
+                            <th scope="col">Estado</th>
                             <th scope="col">Status</th>
                         </tr>
                     </thead>
-                     <!-- ID para o arquivo.js inserir os dados mockados-->
-                    <tbody id="tabelaFornecedoresMock">
-                    </tbody>
+                    <tbody id="tabelaFornecedores"></tbody>
                 </table>
             </div>
-            </table>
-            <script src="../models/fornecedoresMock.js"></script>
-            <script src="../controller/resultadoBusca.js"></script>
+
+            <fieldset class="box-usuario">
+                <legend>Usuário</legend>
+                <span id="usuarioLogado"></span>
+            </fieldset>
+        </section>
+    </div>
+
+    <script type="module" src="../controller/resultadoBusca.js"></script>
 </body>
 </html>
